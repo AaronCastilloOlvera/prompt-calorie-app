@@ -14,7 +14,7 @@ export default function NavBar() {
         <NavLink
           key={l.to}
           to={l.to}
-          end
+          end={l.to === "/"}
           className={({ isActive }) =>
             `flex-1 py-3 text-center text-sm ${isActive ? "font-semibold text-emerald-600" : "text-gray-500"}`
           }

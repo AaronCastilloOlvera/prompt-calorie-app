@@ -82,3 +82,12 @@ export type WeekDay = {
   run_distance_m: number;
   weight_kg: number | null;
 };
+
+export type Exercise = { exercise_name: string; category: Category };
+
+export type ExerciseProgress = {
+  exercise_name: string;
+  category: Category;
+  weeks: { week_start: string; max_weight_kg: number | null; volume_kg: number; distance_m: number }[];
+  sessions: { date: string; sets: ExerciseSet[] }[];
+};

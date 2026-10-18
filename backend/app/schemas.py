@@ -200,3 +200,30 @@ class WeekDayOut(BaseModel):
     ran: bool
     run_distance_m: float
     weight_kg: float | None
+
+
+# --- Ejercicios ---
+
+
+class ExerciseOut(BaseModel):
+    exercise_name: str
+    category: Category
+
+
+class ExerciseWeekOut(BaseModel):
+    week_start: date
+    max_weight_kg: float | None
+    volume_kg: float  # suma de reps × peso
+    distance_m: float
+
+
+class ExerciseSessionOut(BaseModel):
+    date: date
+    sets: list[ExerciseSetOut]
+
+
+class ExerciseProgressOut(BaseModel):
+    exercise_name: str
+    category: Category
+    weeks: list[ExerciseWeekOut]
+    sessions: list[ExerciseSessionOut]  # historial, del más reciente al más antiguo

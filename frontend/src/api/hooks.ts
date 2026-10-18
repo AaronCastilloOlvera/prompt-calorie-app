@@ -4,6 +4,8 @@ import { apiFetch, postJson } from "./client";
 import type {
   BodyWeight,
   Day,
+  Exercise,
+  ExerciseProgress,
   ExerciseSet,
   ExerciseSetsCreate,
   FoodEntriesCreate,
@@ -88,5 +90,16 @@ export function useWeekSummary(start: string) {
   return useQuery({
     queryKey: ["week", start],
     queryFn: () => apiFetch<WeekDay[]>(`/summary/week?start=${start}`),
+  });
+}
+
+export function useExercises() {
+  return useQuery({ queryKey: ["exercises"], queryFn: () => apiFetch<Exercise[]>("/exercises") });
+}
+
+export function useExerciseProgress(name: string) {
+  return useQuery({
+    queryKey: ["exercise-progress", name],
+    queryFn: () => apiFetch<ExerciseProgress>(`/exercises/progress?name=${encodeURIComponent(name)}`),
   });
 }
