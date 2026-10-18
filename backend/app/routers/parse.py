@@ -1,8 +1,12 @@
 from typing import Annotated
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
-from app.schemas import ParsedMeal
+from app.db import get_db
+from app.models import ExerciseSet
+from app.schemas import ParsedMeal, ParsedWorkout, WorkoutText
 from app.services import ai_parser
 
 router = APIRouter(prefix="/parse", tags=["parse"])
@@ -30,5 +34,16 @@ def parse_meal(
 
     try:
         return ai_parser.parse_meal(text, image_bytes, image.content_type if image else None)
+    except ai_parser.AIParseError as e:
+        raise HTTPException(502, str(e)) from e
+
+
+@router.post("/workout", response_model=ParsedWorkout)
+def parse_workout(body: WorkoutText, db: Session = Depends(get_db)) -> ParsedWorkout:
+    known = db.execute(
+        select(ExerciseSet.exercise_name, ExerciseSet.category).distinct().order_by(ExerciseSet.exercise_name)
+    ).all()
+    try:
+        return ai_parser.parse_workout(body.text.strip(), [(n, c) for n, c in known])
     except ai_parser.AIParseError as e:
         raise HTTPException(502, str(e)) from e

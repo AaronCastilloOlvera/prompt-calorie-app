@@ -89,13 +89,56 @@ class FoodEntryOut(BaseModel):
     raw_input: str | None
 
 
-# --- Exercise sets (se llenan en la Fase 3) ---
+# --- Exercise sets ---
+
+
+class SetIn(BaseModel):
+    reps: int | None = Field(default=None, ge=0)
+    weight_kg: float | None = Field(default=None, ge=0)
+    duration_s: int | None = Field(default=None, ge=0)
+    distance_m: float | None = Field(default=None, ge=0)
+
+
+class ExerciseIn(BaseModel):
+    exercise_name: str = Field(min_length=1)
+    category: Category
+    sets: list[SetIn] = Field(min_length=1)
+
+
+class WorkoutText(BaseModel):
+    text: str = Field(min_length=1)
+
+
+class ParsedWorkout(BaseModel):
+    exercises: list[ExerciseIn]
+    notes: str
+
+
+class ExerciseSetsCreate(BaseModel):
+    # Si no viene, se usa la fecha de hoy en APP_TIMEZONE.
+    local_date: date | None = None
+    raw_input: str | None = None
+    exercises: list[ExerciseIn] = Field(min_length=1)
+
+
+class ExerciseSetUpdate(BaseModel):
+    local_date: date | None = None
+    exercise_name: str | None = Field(default=None, min_length=1)
+    category: Category | None = None
+    set_number: int | None = Field(default=None, ge=1)
+    reps: int | None = Field(default=None, ge=0)
+    weight_kg: float | None = Field(default=None, ge=0)
+    duration_s: int | None = Field(default=None, ge=0)
+    distance_m: float | None = Field(default=None, ge=0)
 
 
 class ExerciseSetOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    local_date: date
+    exercise_name: str
+    category: Category
     set_number: int
     reps: int | None
     weight_kg: float | None

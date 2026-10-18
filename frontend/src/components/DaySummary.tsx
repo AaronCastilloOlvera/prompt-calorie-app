@@ -1,5 +1,5 @@
-import { useDay, useDeleteFoodEntry } from "../api/hooks";
-import { MEAL_LABELS, fmt } from "../lib";
+import { useDay, useDeleteExerciseSet, useDeleteFoodEntry } from "../api/hooks";
+import { CATEGORY_LABELS, MEAL_LABELS, describeSet, fmt } from "../lib";
 
 function Bar({ label, value, target, unit }: { label: string; value: number; target: number; unit: string }) {
   const pct = target > 0 ? Math.min(100, (value / target) * 100) : 0;
@@ -22,6 +22,7 @@ function Bar({ label, value, target, unit }: { label: string; value: number; tar
 export default function DaySummary({ date }: { date: string }) {
   const { data, error, isLoading } = useDay(date);
   const del = useDeleteFoodEntry();
+  const delSet = useDeleteExerciseSet();
 
   if (isLoading) return <p className="text-sm text-gray-500">Cargando…</p>;
   if (error || !data) return <p className="text-sm text-red-600">No se pudo cargar el día: {error?.message}</p>;
@@ -72,6 +73,37 @@ export default function DaySummary({ date }: { date: string }) {
           </ul>
         </div>
       ))}
+
+      {data.exercises.length > 0 && (
+        <div className="rounded-xl border border-gray-200 bg-white p-3">
+          <h3 className="mb-1 font-semibold">Ejercicio</h3>
+          <div className="divide-y divide-gray-100">
+            {data.exercises.map((ex) => (
+              <div key={ex.exercise_name} className="py-1.5">
+                <p className="text-sm font-medium">
+                  {ex.exercise_name} <span className="text-xs font-normal text-gray-400">{CATEGORY_LABELS[ex.category]}</span>
+                </p>
+                <ul>
+                  {ex.sets.map((s) => (
+                    <li key={s.id} className="flex items-center gap-2 text-sm text-gray-700">
+                      <span className="w-5 text-xs text-gray-400">{s.set_number}</span>
+                      <span className="flex-1">{describeSet(s)}</span>
+                      <button
+                        onClick={() => confirm(`¿Borrar la serie ${s.set_number} de ${ex.exercise_name}?`) && delSet.mutate(s.id)}
+                        disabled={delSet.isPending}
+                        className="px-1 text-gray-400 hover:text-red-600"
+                        aria-label={`Borrar serie ${s.set_number}`}
+                      >
+                        ✕
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

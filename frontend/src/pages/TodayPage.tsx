@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 
-import { useParseMeal } from "../api/hooks";
+import { useParseMeal, useParseWorkout } from "../api/hooks";
 import DaySummary from "../components/DaySummary";
 import MealEditor from "../components/MealEditor";
+import WorkoutEditor from "../components/WorkoutEditor";
 import { addDays, compressImage, dayLabel, todayLocal } from "../lib";
 
 type Mode = "meal" | "workout";
@@ -17,6 +18,8 @@ export default function TodayPage() {
   const [photoError, setPhotoError] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const parseMeal = useParseMeal();
+  const parseWorkout = useParseWorkout();
+  const parser = mode === "meal" ? parseMeal : parseWorkout;
 
   const clearPhoto = () => {
     if (photoUrl) URL.revokeObjectURL(photoUrl);
@@ -42,9 +45,14 @@ export default function TodayPage() {
     setText("");
     clearPhoto();
     parseMeal.reset();
+    parseWorkout.reset();
   };
 
-  const canSend = mode === "meal" && (text.trim() !== "" || photo !== null) && !parseMeal.isPending;
+  const hasInput = mode === "meal" ? text.trim() !== "" || photo !== null : text.trim() !== "";
+  const canSend = hasInput && !parser.isPending;
+
+  const analyze = () =>
+    mode === "meal" ? parseMeal.mutate({ text, image: photo }) : parseWorkout.mutate(text);
 
   return (
     <div className="space-y-4">
@@ -65,6 +73,8 @@ export default function TodayPage() {
 
       {parseMeal.data ? (
         <MealEditor parsed={parseMeal.data} rawInput={text.trim() || null} date={date} onDone={reset} />
+      ) : parseWorkout.data ? (
+        <WorkoutEditor parsed={parseWorkout.data} rawInput={text.trim()} date={date} onDone={reset} />
       ) : (
         <div className="space-y-3 rounded-xl border border-gray-200 bg-white p-3">
           <div className="grid grid-cols-2 rounded-lg bg-gray-100 p-1 text-sm">
@@ -119,16 +129,14 @@ export default function TodayPage() {
           )}
           {photoError && <p className="text-sm text-red-600">{photoError}</p>}
 
-          {mode === "workout" && <p className="text-sm text-gray-500">El registro de ejercicio llega en la Fase 3.</p>}
-
-          {parseMeal.error && <p className="text-sm text-red-600">{parseMeal.error.message}</p>}
+          {parser.error && <p className="text-sm text-red-600">{parser.error.message}</p>}
 
           <button
-            onClick={() => parseMeal.mutate({ text, image: photo })}
+            onClick={analyze}
             disabled={!canSend}
             className="w-full rounded-lg bg-emerald-600 py-2.5 font-semibold text-white disabled:opacity-50"
           >
-            {parseMeal.isPending ? "Analizando…" : "Analizar"}
+            {parser.isPending ? "Analizando…" : "Analizar"}
           </button>
         </div>
       )}

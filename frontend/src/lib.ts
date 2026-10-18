@@ -1,4 +1,4 @@
-import type { MealType } from "./api/types";
+import type { Category, MealType, SetIn } from "./api/types";
 
 export const MEAL_LABELS: Record<MealType, string> = {
   breakfast: "Desayuno",
@@ -53,3 +53,29 @@ export async function compressImage(file: File, maxSide = 1024, quality = 0.8): 
 }
 
 export const fmt = (n: number) => Math.round(n).toLocaleString("es-MX");
+
+export const CATEGORY_LABELS: Record<Category, string> = {
+  strength: "Fuerza",
+  run: "Correr",
+  cardio_other: "Otro cardio",
+};
+
+/** 1680 → "28:00", 3725 → "1:02:05". */
+export function fmtDuration(s: number): string {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = Math.round(s % 60);
+  const mmss = `${String(m).padStart(h ? 2 : 1, "0")}:${String(sec).padStart(2, "0")}`;
+  return h ? `${h}:${mmss}` : mmss;
+}
+
+/** Texto corto de una serie: "8 × 60 kg", "5.00 km · 28:00 (5:36 /km)", etc. */
+export function describeSet(s: SetIn): string {
+  const parts: string[] = [];
+  if (s.reps != null) parts.push(s.weight_kg != null ? `${s.reps} × ${s.weight_kg} kg` : `${s.reps} reps`);
+  else if (s.weight_kg != null) parts.push(`${s.weight_kg} kg`);
+  if (s.distance_m != null) parts.push(`${(s.distance_m / 1000).toFixed(2)} km`);
+  if (s.duration_s != null) parts.push(fmtDuration(s.duration_s));
+  if (s.distance_m && s.duration_s) parts.push(`(${fmtDuration(s.duration_s / (s.distance_m / 1000))} /km)`);
+  return parts.join(" · ") || "—";
+}

@@ -54,3 +54,16 @@ export type Day = {
   goals: Macros;
   totals: Macros;
 };
+
+export type SetIn = {
+  reps: number | null;
+  weight_kg: number | null;
+  duration_s: number | null;
+  distance_m: number | null;
+};
+
+export type ExerciseIn = { exercise_name: string; category: Category; sets: SetIn[] };
+
+export type ParsedWorkout = { exercises: ExerciseIn[]; notes: string };
+
+export type ExerciseSetsCreate = { local_date: string; raw_input: string | null; exercises: ExerciseIn[] };
