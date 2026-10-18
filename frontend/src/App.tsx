@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router";
 import NavBar from "./components/NavBar";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import TodayPage from "./pages/TodayPage";
+import WeightPage from "./pages/WeightPage";
 
 export default function App() {
   return (
@@ -10,7 +11,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<TodayPage />} />
         <Route path="/semana" element={<PlaceholderPage title="Semana" />} />
-        <Route path="/peso" element={<PlaceholderPage title="Peso" />} />
+        <Route path="/peso" element={<WeightPage />} />
         <Route path="/ejercicios" element={<PlaceholderPage title="Ejercicios" />} />
       </Routes>
       <NavBar />

@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useParseMeal, useParseWorkout } from "../api/hooks";
 import DaySummary from "../components/DaySummary";
 import MealEditor from "../components/MealEditor";
+import WeightInput from "../components/WeightInput";
 import WorkoutEditor from "../components/WorkoutEditor";
 import { addDays, compressImage, dayLabel, todayLocal } from "../lib";
 
@@ -140,6 +141,9 @@ export default function TodayPage() {
           </button>
         </div>
       )}
+
+      {/* key: al cambiar de día se descarta lo que estaba escrito en el campo */}
+      <WeightInput key={date} date={date} />
 
       <DaySummary date={date} />
     </div>

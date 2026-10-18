@@ -168,3 +168,19 @@ class DayOut(BaseModel):
     weight_kg: float | None
     goals: Macros
     totals: Macros
+
+
+# --- Peso corporal ---
+
+
+class BodyWeightIn(BaseModel):
+    # Si no viene, se usa la fecha de hoy en APP_TIMEZONE.
+    local_date: date | None = None
+    weight_kg: float = Field(gt=0, le=500)
+
+
+class BodyWeightOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    local_date: date
+    weight_kg: float

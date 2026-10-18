@@ -67,3 +67,5 @@ export type ExerciseIn = { exercise_name: string; category: Category; sets: SetI
 export type ParsedWorkout = { exercises: ExerciseIn[]; notes: string };
 
 export type ExerciseSetsCreate = { local_date: string; raw_input: string | null; exercises: ExerciseIn[] };
+
+export type BodyWeight = { local_date: string; weight_kg: number };

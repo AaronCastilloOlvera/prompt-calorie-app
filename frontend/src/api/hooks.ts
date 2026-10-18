@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiFetch, postJson } from "./client";
 import type {
+  BodyWeight,
   Day,
   ExerciseSet,
   ExerciseSetsCreate,
@@ -61,5 +62,23 @@ export function useDeleteExerciseSet() {
   return useMutation({
     mutationFn: (id: number) => apiFetch<void>(`/exercise-sets/${id}`, { method: "DELETE" }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["day"] }),
+  });
+}
+
+export function useBodyWeights(from: string, to: string) {
+  return useQuery({
+    queryKey: ["body-weight", from, to],
+    queryFn: () => apiFetch<BodyWeight[]>(`/body-weight?from=${from}&to=${to}`),
+  });
+}
+
+export function useSaveWeight() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body: BodyWeight) => postJson<BodyWeight>("/body-weight", body),
+    onSuccess: (_, body) => {
+      qc.invalidateQueries({ queryKey: ["day", body.local_date] });
+      qc.invalidateQueries({ queryKey: ["body-weight"] });
+    },
   });
 }
