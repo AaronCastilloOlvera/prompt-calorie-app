@@ -184,3 +184,19 @@ class BodyWeightOut(BaseModel):
 
     local_date: date
     weight_kg: float
+
+
+# --- Resumen semanal ---
+
+
+class WeekDayOut(BaseModel):
+    date: date
+    kcal_eaten: float
+    kcal_target: float
+    protein_g: float
+    carbs_g: float
+    fat_g: float
+    worked_out: bool
+    ran: bool
+    run_distance_m: float
+    weight_kg: float | None

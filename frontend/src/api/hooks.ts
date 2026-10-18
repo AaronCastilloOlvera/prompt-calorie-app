@@ -10,6 +10,7 @@ import type {
   FoodEntry,
   ParsedMeal,
   ParsedWorkout,
+  WeekDay,
 } from "./types";
 
 export function useDay(date: string) {
@@ -80,5 +81,12 @@ export function useSaveWeight() {
       qc.invalidateQueries({ queryKey: ["day", body.local_date] });
       qc.invalidateQueries({ queryKey: ["body-weight"] });
     },
+  });
+}
+
+export function useWeekSummary(start: string) {
+  return useQuery({
+    queryKey: ["week", start],
+    queryFn: () => apiFetch<WeekDay[]>(`/summary/week?start=${start}`),
   });
 }

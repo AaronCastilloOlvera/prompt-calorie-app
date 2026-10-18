@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useSearchParams } from "react-router";
 
 import { useParseMeal, useParseWorkout } from "../api/hooks";
 import DaySummary from "../components/DaySummary";
@@ -11,7 +12,10 @@ type Mode = "meal" | "workout";
 
 export default function TodayPage() {
   const today = todayLocal();
-  const [date, setDate] = useState(today);
+  // La fecha vive en la URL (?fecha=YYYY-MM-DD) para poder llegar aquí desde la vista Semana.
+  const [params, setParams] = useSearchParams();
+  const date = params.get("fecha") ?? today;
+  const setDate = (d: string) => setParams(d === today ? {} : { fecha: d });
   const [mode, setMode] = useState<Mode>("meal");
   const [text, setText] = useState("");
   const [photo, setPhoto] = useState<Blob | null>(null);

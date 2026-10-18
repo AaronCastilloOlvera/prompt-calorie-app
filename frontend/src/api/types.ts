@@ -69,3 +69,16 @@ export type ParsedWorkout = { exercises: ExerciseIn[]; notes: string };
 export type ExerciseSetsCreate = { local_date: string; raw_input: string | null; exercises: ExerciseIn[] };
 
 export type BodyWeight = { local_date: string; weight_kg: number };
+
+export type WeekDay = {
+  date: string;
+  kcal_eaten: number;
+  kcal_target: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+  worked_out: boolean;
+  ran: boolean;
+  run_distance_m: number;
+  weight_kg: number | null;
+};

@@ -2,7 +2,7 @@ from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.routers import body_weight, days, exercise_sets, food_entries, goals, health, parse
+from app.routers import body_weight, days, exercise_sets, food_entries, goals, health, parse, summary
 
 settings = get_settings()
 
@@ -25,5 +25,6 @@ api.include_router(exercise_sets.router)
 api.include_router(body_weight.router)
 api.include_router(days.router)
 api.include_router(goals.router)
+api.include_router(summary.router)
 
 app.include_router(api)

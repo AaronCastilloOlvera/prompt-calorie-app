@@ -79,3 +79,10 @@ export function describeSet(s: SetIn): string {
   if (s.distance_m && s.duration_s) parts.push(`(${fmtDuration(s.duration_s / (s.distance_m / 1000))} /km)`);
   return parts.join(" · ") || "—";
 }
+
+/** Lunes de la semana de una fecha YYYY-MM-DD. */
+export function mondayOf(date: string): string {
+  const [y, m, d] = date.split("-").map(Number);
+  const weekday = (new Date(y, m - 1, d).getDay() + 6) % 7; // 0 = lunes
+  return addDays(date, -weekday);
+}
