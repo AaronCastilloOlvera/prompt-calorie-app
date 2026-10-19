@@ -72,10 +72,10 @@ En el proyecto: **New → Database → PostgreSQL** (si ya lo creaste, sáltate 
 
 1. **New → GitHub Repo →** este repositorio. Renombra el servicio a `backend`.
 2. **Settings:**
-   - **Root Directory:** `backend`
+   - **Root Directory** (sección Source → "Add Root Directory"): `backend`
    - **Custom Start Command:**
      `alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-   - **Watch Paths:** `backend/**`
+   - **Watch Paths:** `/backend/**` (con `/` al inicio: se cuentan desde la raíz del repo)
    - **Healthcheck Path:** `/api/health`
    - **Networking → Generate Domain** (anota la URL, ej. `https://backend-xxxx.up.railway.app`)
 3. **Variables:**
@@ -99,8 +99,8 @@ Las migraciones corren solas en cada deploy (`alembic upgrade head` en el start 
 
 1. **New → GitHub Repo →** el mismo repositorio. Renombra el servicio a `frontend`.
 2. **Settings:**
-   - **Root Directory:** `frontend`
-   - **Watch Paths:** `frontend/**`
+   - **Root Directory** (sección Source → "Add Root Directory"): `frontend`
+   - **Watch Paths:** `/frontend/**`
    - Build y start se detectan solos: `npm run build` y `npm start`
      (`serve -s dist`, que regresa `index.html` en cualquier ruta para React Router).
    - **Networking → Generate Domain**
