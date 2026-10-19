@@ -125,3 +125,15 @@ los mismos datos.
 Todavía **no hay login**: cualquiera con la URL puede ver y registrar datos y gastar créditos de la API
 de Claude. El código está listo para agregar un login simple (contraseña en variable de entorno + JWT)
 como dependencia del router `/api` en `backend/app/main.py`.
+
+## Pendientes
+
+- [ ] **Login simple**: contraseña en variable de entorno + JWT, como dependencia del router `/api`
+  en `backend/app/main.py`. Mientras no exista, poner un límite de gasto mensual en la consola de
+  Anthropic (Settings → Limits).
+- [ ] **Editar registros guardados** desde la interfaz (comida y series). Hoy solo se pueden borrar;
+  los endpoints `PATCH /api/food-entries/{id}` y `PATCH /api/exercise-sets/{id}` ya existen.
+- [ ] **Semana: día en curso sin color** de estado hasta que termine (hoy sale en rojo porque el día
+  todavía está incompleto).
+- [ ] **Semana: recordar la semana** que estabas viendo al regresar del detalle de un día (guardarla
+  en la URL, como la fecha en la vista Hoy).
