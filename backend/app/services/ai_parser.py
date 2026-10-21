@@ -88,8 +88,10 @@ aceite…) y suma. En `portion_description` pon la cantidad y el desglose breve,
 - Si algo es ambiguo, elige la porción típica, baja `confidence` y explica el supuesto en `notes`.
 - Considera el aceite o la grasa de cocción cuando el método lo implique (frito, guisado).
 - Si hay foto y texto, el texto tiene prioridad sobre lo que veas en la foto.
-- Infiere `meal_type` solo si el texto lo indica explícitamente ("desayuné", "en la cena"...); \
-si no, usa null.
+- Infiere `meal_type` solo si el texto lo indica explícitamente; si no, usa null. Usa el sentido \
+mexicano: "desayuno"/"desayuné" y "almuerzo"/"almorcé" (comida de media mañana) → breakfast; \
+"la comida" (comida fuerte de mediodía o tarde) → lunch; "cena"/"cené" → dinner; \
+"colación"/"botana"/"snack" → snack. El verbo "comí" solo no indica tipo de comida.
 - Escribe `name`, `portion_description` y `notes` en español.\
 """
 
