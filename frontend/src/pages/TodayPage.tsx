@@ -21,7 +21,8 @@ export default function TodayPage() {
   const [photo, setPhoto] = useState<Blob | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
-  const fileInput = useRef<HTMLInputElement>(null);
+  const cameraInput = useRef<HTMLInputElement>(null);
+  const galleryInput = useRef<HTMLInputElement>(null);
   const parseMeal = useParseMeal();
   const parseWorkout = useParseWorkout();
   const parser = mode === "meal" ? parseMeal : parseWorkout;
@@ -30,7 +31,8 @@ export default function TodayPage() {
     if (photoUrl) URL.revokeObjectURL(photoUrl);
     setPhoto(null);
     setPhotoUrl(null);
-    if (fileInput.current) fileInput.current.value = "";
+    if (cameraInput.current) cameraInput.current.value = "";
+    if (galleryInput.current) galleryInput.current.value = "";
   };
 
   const handleFile = async (file: File | undefined) => {
@@ -107,20 +109,33 @@ export default function TodayPage() {
           />
 
           {mode === "meal" && (
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2">
               <input
-                ref={fileInput}
+                ref={cameraInput}
                 type="file"
                 accept="image/*"
                 capture="environment"
                 onChange={(e) => handleFile(e.target.files?.[0])}
                 className="hidden"
               />
+              <input
+                ref={galleryInput}
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFile(e.target.files?.[0])}
+                className="hidden"
+              />
               <button
-                onClick={() => fileInput.current?.click()}
+                onClick={() => cameraInput.current?.click()}
                 className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
               >
-                📷 {photo ? "Cambiar foto" : "Foto"}
+                📷 Cámara
+              </button>
+              <button
+                onClick={() => galleryInput.current?.click()}
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              >
+                🖼️ Galería
               </button>
               {photoUrl && (
                 <div className="flex items-center gap-2">
