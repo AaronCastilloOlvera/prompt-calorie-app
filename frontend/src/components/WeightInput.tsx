@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { useDay, useSaveWeight } from "../api/hooks";
+import { toNumber } from "../lib";
 
 export default function WeightInput({ date }: { date: string }) {
   const { data } = useDay(date);
@@ -10,8 +11,8 @@ export default function WeightInput({ date }: { date: string }) {
 
   const saved = data?.weight_kg ?? null;
   const value = draft ?? (saved == null ? "" : String(saved));
-  const weight = Number(value);
-  const canSave = value.trim() !== "" && weight > 0 && weight !== saved && !save.isPending;
+  const weight = toNumber(value);
+  const canSave = value.trim() !== "" && Number.isFinite(weight) && weight > 0 && weight !== saved && !save.isPending;
 
   const handleSave = () =>
     save.mutate({ local_date: date, weight_kg: weight }, { onSuccess: () => setDraft(null) });
@@ -29,10 +30,8 @@ export default function WeightInput({ date }: { date: string }) {
       </label>
       <input
         id="weight"
-        type="number"
+        type="text"
         inputMode="decimal"
-        step="0.1"
-        min="0"
         placeholder="—"
         value={value}
         onChange={(e) => setDraft(e.target.value)}

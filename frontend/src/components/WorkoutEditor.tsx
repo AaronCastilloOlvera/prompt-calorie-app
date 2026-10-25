@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useCreateExerciseSets } from "../api/hooks";
 import type { Category, ParsedWorkout, SetIn } from "../api/types";
-import { CATEGORY_LABELS } from "../lib";
+import { CATEGORY_LABELS, toNumber } from "../lib";
 
 // En pantalla se edita en km y minutos; al guardar se convierte a metros y segundos.
 const SET_FIELDS = [
@@ -30,7 +30,10 @@ function toSetRow(s: SetIn): SetRow {
   };
 }
 
-const parse = (s: string, scale = 1) => (s.trim() === "" ? null : Number(s) * scale);
+const parse = (s: string, scale = 1) => {
+  const n = toNumber(s);
+  return s.trim() === "" || !Number.isFinite(n) ? null : n * scale;
+};
 
 function toSetIn(r: SetRow): SetIn {
   const duration = parse(r.min, 60);
@@ -149,10 +152,8 @@ export default function WorkoutEditor({ parsed, rawInput, date, onDone }: Props)
                   {SET_FIELDS.map((f) => (
                     <input
                       key={f.key}
-                      type="number"
+                      type="text"
                       inputMode="decimal"
-                      min="0"
-                      step="any"
                       value={s[f.key]}
                       onChange={(e) => updateSet(ex, s.id, { [f.key]: e.target.value })}
                       className="w-full rounded border border-gray-300 px-1 py-1 text-sm text-gray-900"

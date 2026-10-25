@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useCreateFoodEntries } from "../api/hooks";
 import type { Confidence, MealType, ParsedMeal } from "../api/types";
-import { MEAL_LABELS, MEAL_TYPES, fmt, suggestMealType } from "../lib";
+import { MEAL_LABELS, MEAL_TYPES, fmt, suggestMealType, toNumber } from "../lib";
 
 const NUM_FIELDS = [
   { key: "grams", label: "g" },
@@ -38,7 +38,7 @@ const emptyRow = (): Row => ({
   grams: "", kcal: "", protein_g: "", carbs_g: "", fat_g: "",
 });
 
-const num = (s: string) => Number(s) || 0;
+const num = (s: string) => toNumber(s) || 0;
 
 type Props = {
   parsed: ParsedMeal;
@@ -135,10 +135,8 @@ export default function MealEditor({ parsed, rawInput, date, onDone }: Props) {
                 <label key={f.key} className="text-[10px] text-gray-500">
                   {f.label}
                   <input
-                    type="number"
+                    type="text"
                     inputMode="decimal"
-                    min="0"
-                    step="any"
                     value={r[f.key]}
                     onChange={(e) => update(r.id, { [f.key]: e.target.value })}
                     className="w-full rounded border border-gray-300 px-1 py-1 text-sm text-gray-900"

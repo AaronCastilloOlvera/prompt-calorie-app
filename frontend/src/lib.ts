@@ -86,3 +86,8 @@ export function mondayOf(date: string): string {
   const weekday = (new Date(y, m - 1, d).getDay() + 6) % 7; // 0 = lunes
   return addDays(date, -weekday);
 }
+
+/** Convierte lo que se escribe en un campo numérico; acepta coma o punto decimal ("78,5" o "78.5"). */
+export function toNumber(s: string): number {
+  return Number(s.trim().replace(",", "."));
+}
